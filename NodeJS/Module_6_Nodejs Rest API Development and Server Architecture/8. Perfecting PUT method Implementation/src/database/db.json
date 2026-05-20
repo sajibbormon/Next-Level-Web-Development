@@ -64,5 +64,11 @@
         "name": "Apple MacBook Pro M5",
         "description": "Thin and light laptop powered by the M2 chip, featuring a 13.6-inch Liquid Retina display and up to 18 hours of battery life.",
         "price": 1199
+    },
+    {
+        "id": "1779270632555",
+        "name": "Apple Iphone 18 pro max",
+        "description": "A19 bionic chip with 256GB of memory, 120 Hz liquid retina display.",
+        "price": 1199
     }
 ]

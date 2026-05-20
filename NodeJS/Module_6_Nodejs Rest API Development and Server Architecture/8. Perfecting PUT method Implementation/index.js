@@ -50,6 +50,71 @@ Common Status Codes
 create a else if condition for put method in product.controller.ts
 
 
+else if(method === "PUT" && productId !== null){
+        const body = await parseBody(req);
 
+
+        //as we have stored data using array of objects, so we wil find the index of the product from all products, first of read products. and we will find the index using find function.
+
+        const products = readProduct();
+                
+        // const productIndex = products.find((product: Iproduct) => {
+        //     // if(productId.toString() === body.id.toString()){
+        //     //     console.log("found it");
+        //     //     // console.log(body.id);
+
+        //     // }else{
+        //     //     console.log("not found");
+        //     // }
+
+
+        //     // let's find out the index 
+            
+        // })
+
+
+        const productIndex = products.findIndex((product : Iproduct) => product.id === productId.toString() );
+        // console.log(productIndex);
+
+
+
+        we are first of all taking all products, as it all products is an array of objects, so are searching the index of the object base on id. to do this we are using products.findIndex() . after fiding the product, we have to see if the product exists or not. if index is -1 then doesn't exist, then we will show 404, product not found. Otherwise we have to update the information of the array's particular object based on id then we have to insert the products means insert the array into the database. and lastly we can print the message for the browser, product updated successfully. 
+
+        the full code of else if condition:
+
+
+        else if(method === "PUT" && productId !== null){
+        const body = await parseBody(req);
+
+
+        //as we have stored data using array of objects, so we wil find the index of the product from all products, first of read products. and we will find the index using find function.
+
+        const products = readProduct();
+
+        const productIndex = products.findIndex((product : Iproduct) => product.id === productId.toString() );
+        console.log(productIndex);
+
+        if(productIndex < 0){
+            res.writeHead(404, {"content-type": "application/json"} );
+            res.end(JSON.stringify({
+                message: "Product not found!."
+
+            }));
+        }else{
+            products[productIndex] = {
+                "id": products[productIndex].id,
+                ...body
+            }
+
+            insertProduct(products);
+            res.writeHead(404, {"content-type": "application/json"} );
+            res.end(JSON.stringify({
+                message: "Product updated successfully!.", data: products[productIndex]
+
+            }));
+        }
+
+
+    }
 
  */

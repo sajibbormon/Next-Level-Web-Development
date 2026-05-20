@@ -46,19 +46,35 @@ export const productController  =  async (req: IncomingMessage, res: ServerRespo
         const products = readProduct();
 
         // find the product.
-        const product = products.find((p : Iproduct ) => p.id === productId.toString());
-            // console.log(product);
+        // const product = products.find((p : Iproduct ) => p.id === productId.toString());
+         // console.log(product);
 
-        res.writeHead(200, {"content-type": "application/json"} );
-        res.end(JSON.stringify({message: "Product retrive successful.", DATA:{product}}));
+        //  const products = readProduct();
+
+        const productIndex = products.findIndex((product : Iproduct) => product.id === productId.toString() );
+        // console.log(productIndex);
+
+        if(productIndex < 0){
+            res.writeHead(404, {"content-type": "application/json"} );
+            res.end(JSON.stringify({
+                message: "Product not found!."
+
+            }));
+        }else{
+            const product = products.find((p : Iproduct ) => p.id === productId.toString());
+            res.writeHead(200, {"content-type": "application/json"} );
+            res.end(JSON.stringify({message: "Product retrive successful.", DATA:{product}}));
+        }
+
+
+
 
     }else if(method === "POST" && url === "/product"){
         //creating a new product using POST method
 
 
-
         const body = await parseBody(req); // sending data to the server 
-        // console.log(body);
+        console.log(body);
     
         //let's create id for the new product
 
@@ -79,7 +95,41 @@ export const productController  =  async (req: IncomingMessage, res: ServerRespo
             message: "Product created successful.", data: newProduct
 
         }));
+
+
     }else if(method === "PUT" && productId !== null){
-        
+        const body = await parseBody(req);
+
+
+        //as we have stored data using array of objects, so we wil find the index of the product from all products, first of read products. and we will find the index using find function.
+
+        const products = readProduct();
+
+        const productIndex = products.findIndex((product : Iproduct) => product.id === productId.toString() );
+        console.log(productIndex);
+
+        if(productIndex < 0){
+            res.writeHead(404, {"content-type": "application/json"} );
+            res.end(JSON.stringify({
+                message: "Product not found!."
+
+            }));
+        }else{
+            products[productIndex] = {
+                "id": products[productIndex].id,
+                ...body
+            }
+
+            insertProduct(products);
+            res.writeHead(404, {"content-type": "application/json"} );
+            res.end(JSON.stringify({
+                message: "Product updated successfully!.", data: products[productIndex]
+
+            }));
+        }
+
+
+
+
     }
 } 
