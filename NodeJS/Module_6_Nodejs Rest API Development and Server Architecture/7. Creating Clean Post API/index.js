@@ -279,6 +279,75 @@ Now let's make it clean (Creating Clean Post API)
 
 
 
+we get the data in the previous lecture, now we want to insert the data into the database now, means we want to write the data inside the database. 
+
+inside the else if let's create product id by using Date.now(), and spread the body that we get from the client. now print it to see changes.
+
+
+const body = await parseBody(req); // sending data to the server 
+        // console.log(body);
+    
+        //let's create id for the new product
+
+        const newProduct = {
+            id: Date.now(), 
+            ...body, //spreading everything inside body.
+        } 
+
+        console.log(newProduct);
+
+
+
+output in the console:
+
+server is running on port: 5001
+{
+  id: 1779258028507,
+  name: 'Apple MacBook Pro M5',
+  description: 'Thin and light laptop powered by the M2 chip, featuring a 13.6-inch Liquid Retina display and up to 18 hours of battery life.',
+  price: 1199
+}
+
+
+now, as we want to read/write in the service directory, inside the product.service.ts file. We will use fs.writeFileSync() function to write.
+
+fs.writeFileSync(file, data[, options]), it takes 2 parameters and an optional parameter.
+
+inside the product.service.ts
+
+export const insertProduct = (payload: any)=>{
+    fs.writeFileSync(filePath, JSON.stringify(payload), "utf-8");
+}
+
+
+
+inside else condition, we need to read all products, which is an array, then push the newProduct and after that call the insertProduct fucntion to pass the array for writing to database:
+
+const body = await parseBody(req); // sending data to the server 
+        // console.log(body);
+    
+        //let's create id for the new product
+
+        const newProduct = {
+            id: Date.now().toString(), 
+            ...body, //spreading everything inside body.
+        } 
+
+        // console.log(newProduct);
+
+        const products = readProduct();
+        products.push(newProduct);
+        insertProduct(products);
+
+
+        res.writeHead(200, {"content-type": "application/json"} );
+        res.end(JSON.stringify({
+            message: "Product created successful.", data: newProduct
+
+        }));
+
+
+
 
 
 */
