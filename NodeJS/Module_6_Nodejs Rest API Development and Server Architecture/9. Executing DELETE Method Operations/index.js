@@ -58,7 +58,7 @@ else if(method === "DELETE" && productId != null){
             
             //DELETE
 
-            const deltedProduct = products.splice(productIndex);
+            const deltedProduct = products.splice(productIndex, 1);
 
             insertProduct(products);
 

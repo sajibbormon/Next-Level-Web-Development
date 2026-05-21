@@ -1,0 +1,270 @@
+import type { IncomingMessage, ServerResponse } from "http";
+import { insertProduct, readProduct } from "../service/product.service";
+import type { Iproduct } from "../types/product.type";
+import { parseBody } from "../utility/parseBody";
+import { sendResponse } from "../utility/sendResponse";
+
+
+
+export const productController = async (req: IncomingMessage, res: ServerResponse) => {
+    // console.log(req);
+    const url = req.url;
+    const method = req.method;
+
+    const urlArray = url?.split('/');
+    // console.log(urlArray);
+
+    const productId = urlArray && urlArray[1] === "products" ? Number(urlArray[2]) : null;
+
+    // getting all products information
+    if (url === "/products" && method === "GET") {
+
+        //Get all products using GET method.
+
+
+
+        // const products = {
+        //     id: "1",
+        //     name: "Product 1"
+        // }
+
+        const products = readProduct();
+
+        try {
+            return sendResponse(res, 200, true, "Products retrive successful.", products);
+
+        } catch (error) {
+            return sendResponse(res, 500, false, "Something went wrong!", error);
+
+        }
+
+        //    sendResponse(res, 200, true, "Products retrive successful.", products);
+
+        //    res.writeHead(200, {"content-type": "application/json"} );
+        //    res.end(JSON.stringify({message: "Products retrive successful.", DATA:{products}}));
+
+    } else if (method === "GET" && productId !== null) {  // GET single product
+
+        //find a single product using GET method
+
+
+
+
+        // console.log("Your product id is", productId);
+
+        // now we have to find the specific product of the given id
+
+        const products = readProduct();
+
+        // find the product.
+        // const product = products.find((p : Iproduct ) => p.id === productId.toString());
+        // console.log(product);
+
+        //  const products = readProduct();
+
+        const productIndex = products.findIndex((product: Iproduct) => product.id === productId.toString());
+        // console.log(productIndex);
+
+        if (productIndex < 0) {
+
+
+            try {
+                return sendResponse(res, 404, true, "Product not found!.");
+
+            } catch (error) {
+                return sendResponse(res, 500, false, "Something went wrong!", error);
+
+            }
+
+            // sendResponse(res, 404, true, "Product not found!.");
+
+            // res.writeHead(404, {"content-type": "application/json"} );
+            // res.end(JSON.stringify({
+            //     message: "Product not found!."
+
+            // }));
+
+        } else {
+            const product = products.find((p: Iproduct) => p.id === productId.toString());
+
+
+            try {
+                return sendResponse(res, 200, true, "Product retrive successful.", product);
+
+
+            } catch (error) {
+                return sendResponse(res, 500, false, "Something went wrong!", error);
+
+            }
+
+
+            // sendResponse(res, 200, true, "Product retrive successful.", product);
+
+
+            // res.writeHead(200, {"content-type": "application/json"} );
+            // res.end(JSON.stringify({message: "Product retrive successful.", DATA:{product}}));
+        }
+
+
+
+
+    } else if (method === "POST" && url === "/product") {
+        //creating a new product using POST method
+
+
+        const body = await parseBody(req); // sending data to the server 
+        console.log(body);
+
+        //let's create id for the new product
+
+        const newProduct = {
+            id: Date.now().toString(),
+            ...body, //spreading everything inside body.
+        }
+
+        // console.log(newProduct);
+
+        const products = readProduct();
+        products.push(newProduct);
+        insertProduct(products);
+
+        try {
+            return sendResponse(res, 200, true, "Product created successful.", newProduct)
+
+
+
+        } catch (error) {
+            return sendResponse(res, 500, false, "Something went wrong!", error);
+
+        }
+
+
+
+        // sendResponse(res, 200, true, "Product created successful.", newProduct)
+
+
+
+    } else if (method === "PUT" && productId !== null) {
+        const body = await parseBody(req);
+
+
+        //as we have stored data using array of objects, so we wil find the index of the product from all products, first of read products. and we will find the index using find function.
+
+        const products = readProduct();
+
+        const productIndex = products.findIndex((product: Iproduct) => product.id === productId.toString());
+        console.log(productIndex);
+
+        if (productIndex < 0) {
+
+            try {
+                return sendResponse(res, 404, true, "Product not found!");
+
+            } catch (error) {
+                return sendResponse(res, 500, false, "Something went wrong!", error);
+            }
+
+            // sendResponse(res, 404, true, "Product not found!.");
+
+            // res.writeHead(404, {"content-type": "application/json"} );
+            // res.end(JSON.stringify({
+            //     message: "Product not found!."
+
+            // }));
+
+
+        } else {
+            products[productIndex] = {
+                "id": products[productIndex].id,
+                ...body
+            }
+
+            insertProduct(products);
+
+            try {
+                return sendResponse(res, 200, true, "Product updated successfully!.", products[productIndex]);
+
+            } catch (error) {
+                return sendResponse(res, 500, false, "Something went wrong!", error);
+
+            }
+
+
+
+            // sendResponse(res, 200, true, "Product updated successfully!.", products[productIndex]);
+
+
+            // res.writeHead(200, {"content-type": "application/json"} );
+            // res.end(JSON.stringify({
+            //     message: "Product updated successfully!.", data: products[productIndex]
+
+            // }));
+
+
+        }
+
+    } else if (method === "DELETE" && productId != null) {
+        const body = await parseBody(req);
+
+
+        //as we have stored data using array of objects, so we wil find the index of the product from all products, first of read products. and we will find the index using find function.
+
+        const products = readProduct();
+
+        const productIndex = products.findIndex((product: Iproduct) => product.id === productId.toString());
+        console.log(productIndex);
+
+        if (productIndex < 0) {
+
+
+            try {
+                return sendResponse(res, 404, true, "Product not found!.");
+
+
+            } catch (error) {
+                return sendResponse(res, 500, false, "Something went wrong!", error);
+
+            }
+
+
+            // sendResponse(res, 404, true, "Product not found!.");
+
+
+            // res.writeHead(404, {"content-type": "application/json"} );
+            // res.end(JSON.stringify({
+            //     message: "Product not found!."
+
+            // }));
+
+        } else {
+
+            //DELETE
+
+            const deltedProduct = products.splice(productIndex, 1);
+
+            insertProduct(products);
+
+            try {
+                return sendResponse(res, 200, true, "Product Deleted successfully!", deltedProduct);
+
+
+
+            } catch (error) {
+                return sendResponse(res, 500, false, "Something went wrong!", error);
+
+            }
+
+
+            // sendResponse(res, 200, true, "Product Deleted successfully!", deltedProduct);
+
+            // res.writeHead(200, {"content-type": "application/json"} );
+            // res.end(JSON.stringify({
+            //     message: "Product Deleted successfully!.", data: deltedProduct
+
+            // }));
+
+
+        }
+
+    }
+} 
