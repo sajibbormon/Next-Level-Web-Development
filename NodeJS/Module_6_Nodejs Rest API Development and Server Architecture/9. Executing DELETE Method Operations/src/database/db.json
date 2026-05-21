@@ -1,0 +1,74 @@
+[
+    {
+        "id": "1",
+        "name": "Apple MacBook Air M2",
+        "description": "Thin and light laptop powered by the M2 chip, featuring a 13.6-inch Liquid Retina display and up to 18 hours of battery life.",
+        "price": 1199
+    },
+    {
+        "id": "2",
+        "name": "Sony WH-1000XM5",
+        "description": "Industry-leading noise-canceling wireless headphones with Auto NC Optimizer and up to 30 hours of battery life.",
+        "price": 398
+    },
+    {
+        "id": "3",
+        "name": "Logitech MX Master 3S",
+        "description": "Ergonomic wireless mouse with ultra-fast MagSpeed scrolling, quiet clicks, and an 8000 DPI track-on-glass sensor.",
+        "price": 99
+    },
+    {
+        "id": "4",
+        "name": "Dell UltraSharp 27 4K USB-C Hub Monitor",
+        "description": "27-inch 4K monitor featuring IPS Black technology for brilliant color and contrast, plus extensive connectivity options.",
+        "price": 579
+    },
+    {
+        "id": "5",
+        "name": "Keychron Q1 Pro Mechanical Keyboard",
+        "description": "75% layout QMK/VIA wireless custom mechanical keyboard with a full aluminum CNC machined body and hot-swappable switches.",
+        "price": 199
+    },
+    {
+        "id": "6",
+        "name": "Samsung T7 Shield Portable SSD 2TB",
+        "description": "Rugged, fast, and compact portable solid-state drive with read/write speeds of up to 1,050/1,000 MB/s and IP65 water resistance.",
+        "price": 159
+    },
+    {
+        "id": "7",
+        "name": "Anker 737 Power Bank",
+        "description": "24,000mAh 3-port portable charger with a 140W output, capable of fast-charging laptops, tablets, and phones.",
+        "price": 149
+    },
+    {
+        "id": "8",
+        "name": "Herman Miller Aeron Chair",
+        "description": "Ergonomic office chair featuring Pellicle suspension material to dissipate body heat and fully adjustable lumbar support.",
+        "price": 1275
+    },
+    {
+        "id": "9",
+        "name": "Nintendo Switch OLED Model",
+        "description": "Versatile gaming console with a vibrant 7-inch OLED screen, a wide adjustable stand, and a dock with a wired LAN port.",
+        "price": 349
+    },
+    {
+        "id": "10",
+        "name": "Yeti Rambler 20 oz Tumbler",
+        "description": "Stainless steel, vacuum insulated tumbler with a MagSlider lid, designed to keep drinks hot or cold for hours.",
+        "price": 35
+    },
+    {
+        "id": "1779261230876",
+        "name": "Apple MacBook Pro M5",
+        "description": "Thin and light laptop powered by the M2 chip, featuring a 13.6-inch Liquid Retina display and up to 18 hours of battery life.",
+        "price": 1199
+    },
+    {
+        "id": "1779270632555",
+        "name": "Apple Iphone 18 pro max",
+        "description": "A19 bionic chip with 256GB of memory, 120 Hz liquid retina display.",
+        "price": 1199
+    }
+]
