@@ -1,5 +1,5 @@
 import express, { type Application, type Request, type Response } from "express"
-import {Pool} from "pg"
+import { Pool } from "pg"
 
 
 const app: Application = express()
@@ -7,7 +7,7 @@ const port = 8080
 
 app.use(express.json()); // middleware
 app.use(express.text());
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 
 
 const pool = new Pool({
@@ -15,9 +15,9 @@ const pool = new Pool({
 });
 
 
-const initDB = async() => {
-    try {
-      await pool.query(`
+const initDB = async () => {
+  try {
+    await pool.query(`
           CREATE TABLE IF NOT EXISTS users(
             id SERIAL PRIMARY KEY,
             name VARCHAR(50),
@@ -31,10 +31,10 @@ const initDB = async() => {
 
           )
         `)
-        console.log("Database connected successfully!");
-    } catch (error) { 
-      console.log(error);
-    }
+    console.log("Database connected successfully!");
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 
@@ -45,59 +45,58 @@ app.get('/', (req: Request, res: Response) => {
   res.status(200).json({
     success: true,
     message: "Express Server",
-    "author": "Sajib Bormon"  
+    "author": "Sajib Bormon"
 
   })
 });
 
 // get all users
 
-app.get('/api/users', async (req: Request, res: Response) =>{
+app.get('/api/users', async (req: Request, res: Response) => {
 
   try {
     const result = await pool.query(`
       SELECT * FROM users
     `);
-    
+
     res.status(200).json({
       success: true,
       message: "Users retrived successfully!",
       data: result.rows
-    })    
+    })
   } catch (error) {
-      res.status(404).json({
+    res.status(404).json({
       success: false,
       message: "No user created!",
       data: {}
-    }) 
+    })
   }
 
-  
+
 });
 
 
 // get single user
 
-app.get('/api/users/:id', async (req: Request, res: Response) =>{
+app.get('/api/users/:id', async (req: Request, res: Response) => {
 
   const { id } = req.params;
 
   const result = await pool.query(`
     SELECT * FROM users WHERE id = $1
   `, [id]);
-  
+
   // console.log(result);
 
   //handle error if no user is created
 
-  
 
-  if(result.rows.length === 0)
-  {
+
+  if (result.rows.length === 0) {
     res.status(404).json({
-    success: false,
-    message: "Not found!",
-    data: {}
+      success: false,
+      message: "Not found!",
+      data: {}
     });
   }
 
@@ -106,20 +105,27 @@ app.get('/api/users/:id', async (req: Request, res: Response) =>{
     message: "Users retrived successfully!",
     data: result.rows[0]
   })
-  
+
 });
 
 
 app.post('/', async (req, res) => {
 
-  const {name, email, password, is_active, age } = req.body;
-  
+  const { name, email, password, is_active, age } = req.body;
+
   try {
-      const result = await pool.query(`
+    const result = await pool.query(`
       INSERT INTO users (name, email, password, is_active, age)
       VALUES($1, $2, $3, $4, $5) RETURNING *  
     `, [name, email, password, is_active, age]);
 
+    if (result.rows.length === 0) {
+      res.status(404).json({
+        success: false,
+        message: "Not found!",
+        data: {}
+      });
+    }
 
     res.status(201).json({
       success: true,
@@ -127,26 +133,26 @@ app.post('/', async (req, res) => {
       data: result.rows[0]
     });
 
-  } catch (error: any ) {
-      res.status(500).json({
+  } catch (error: any) {
+    res.status(500).json({
       success: false,
       message: error.message,
       data: error
-    }); 
+    });
   }
 });
 
 
 // update using PUT
 
-app.put('/api/users/:id', async(req: Request, res: Response)=>{
+app.put('/api/users/:id', async (req: Request, res: Response) => {
   const { id } = req.params;
-  const {name, password, age, is_active, updated_at} = req.body;
+  const { name, password, age, is_active, updated_at } = req.body;
 
   console.log(id);
-  console.log({name, password});
+  console.log({ name, password });
   try {
-      const result = await pool.query(`
+    const result = await pool.query(`
               UPDATE users SET name=$1,
               password=$2,
               age=$3,
@@ -155,13 +161,22 @@ app.put('/api/users/:id', async(req: Request, res: Response)=>{
               WHERE id=$5
               RETURNING *
           `, [name, password, age, is_active, id]);
-         
-        res.status(201).json({
-          success: true,
-          message: "User updated successfully!",
-          data: {name, password, age, is_active, updated_at}
-        });
-      
+
+    if (result.rows.length === 0) {
+      res.status(404).json({
+        success: false,
+        message: "Not found!",
+        data: {}
+      });
+    }
+
+
+    res.status(201).json({
+      success: true,
+      message: "User updated successfully!",
+      data: { name, password, age, is_active, updated_at }
+    });
+
   } catch (error: any) {
     res.status(404).json({
       success: false,
