@@ -188,7 +188,7 @@ app.delete("/api/users/:id", async (req: Request, res: Response) => {
           DELETE FROM users WHERE id=$1
         `, [id])
 
-    if (result.rows.length === 0) {
+    if (result.rowCount === 0) {
       res.status(404).json({
         success: false,
         message: "Not found!",
